@@ -7,6 +7,6 @@ public class Teste{
     public static void main(String[] args) {
         ListaEncadeada<Pessoa> lista = new ListaEncadeada<>();
     }
-
+//coisa
 
 }
