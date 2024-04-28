@@ -2,6 +2,7 @@ package TabelaHash;
 
 import dados.Pessoa;
 import listaEncadeada.ListaEncadeada;
+import sha224.Sha224;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,7 +10,7 @@ import java.io.IOException;
 
 public class TabelaHash {
 
-    private ListaEncadeada<Pessoa> [] tabela;
+    private ListaEncadeada<String> [] tabela;
     private int tamanho;
 
 
@@ -63,17 +64,18 @@ public class TabelaHash {
 
     public void inserir(String chave, Pessoa valor){
         int pos = funcaoHash(chave);
+        String hash = Sha224.calcularSHA224(valor.getNome());
 
         if (posicaoVazia(pos)){
-            ListaEncadeada<Pessoa> bucket = new ListaEncadeada<>();
-            bucket.adicionar(valor);
+            ListaEncadeada<String> bucket = new ListaEncadeada<>();
+            bucket.adicionar(hash);
             this.tabela[pos] = bucket;
         } else {
-            if (this.tabela[pos].contains(valor)){
+            if (this.tabela[pos].contains(hash)){
                 System.out.println(ELEMENTO_CADASTRADO);
                 return;
             }
-            this.tabela[pos].adicionar(valor);
+            this.tabela[pos].adicionar(hash);
         }
     }
 
@@ -84,7 +86,7 @@ public class TabelaHash {
             System.out.println(ELEMENTO_NAO_EXISTE);
             return;
         }else {
-            Pessoa elemento = this.tabela[pos].busca(pos);
+            String elemento = this.tabela[pos].busca(pos);
             if (this.tabela[pos].contains(elemento)){
                 int posLista = this.tabela[pos].buscaPorElemento(elemento);
                 this.tabela[pos].remover(posLista);
@@ -97,12 +99,12 @@ public class TabelaHash {
         if(posicaoVazia(pos)){
             System.out.println(ELEMENTO_NAO_EXISTE);
         }else{
-            ListaEncadeada<Pessoa> bucket = this.tabela[pos];
+            ListaEncadeada<String> bucket = this.tabela[pos];
             boolean busca =false;
             for(int i=0;i< bucket.getTamanho();i++){
-                Pessoa pessoa= bucket.busca(i);
-                if(pessoa.getId().equals(chave)){
-                    System.out.println("Elemento encontrado :"+ pessoa.toString());
+                String valor = bucket.busca(i);
+                if(valor.equals(chave)){
+                    System.out.println("Elemento encontrado :"+ valor);
                     busca=true;
                     break;
                 }
@@ -120,10 +122,10 @@ public class TabelaHash {
                 System.out.println("NULL");
             }else{
                 System.out.print("Posicao " + i + ": ");
-                ListaEncadeada<Pessoa> bucket = this.tabela[i];
+                ListaEncadeada<String> bucket = this.tabela[i];
                 for (int j = 0; j < bucket.getTamanho(); j++) {
-                    Pessoa pessoa = bucket.busca(j);
-                    System.out.print(pessoa.getId() + " - " + pessoa.getNome() + " . "); // Imprime chave e valor
+                    String valor = bucket.busca(j);
+                    System.out.print(valor + " - " +  " . "); // Imprime chave e valor
                 }
                 System.out.println();
 
