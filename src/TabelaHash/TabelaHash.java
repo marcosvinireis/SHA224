@@ -4,9 +4,7 @@ import dados.Pessoa;
 import listaEncadeada.ListaEncadeada;
 import sha224.Sha224;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class TabelaHash {
 
@@ -54,6 +52,20 @@ public class TabelaHash {
         return dados;
     }
 
+    public void gravarEmArquivo(String caminho, String hash, String nome) {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(caminho, true));
+
+            bw.write(nome + " -> " + hash);
+            bw.newLine();
+
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void inserirDeArquivo(String path){
         ListaEncadeada<Pessoa> dados = this.lerDeArquivo(path);
         for (int i = 0; i < dados.getTamanho(); i++) {
@@ -65,6 +77,7 @@ public class TabelaHash {
     public void inserir(String chave, Pessoa valor){
         int pos = funcaoHash(chave);
         String hash = Sha224.calcularSHA224(valor.getNome());
+        gravarEmArquivo("src/dados/saidaDados", hash, valor.getNome());
 
         if (posicaoVazia(pos)){
             ListaEncadeada<String> bucket = new ListaEncadeada<>();

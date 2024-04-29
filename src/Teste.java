@@ -11,7 +11,7 @@ public class Teste{
 
         tabela.inserirDeArquivo(caminho);
 
-        tabela.buscar("ABC123Z4");
+        tabela.buscar("marcos");
         tabela.buscar("DEF456Y7");
 
         Pessoa p = new Pessoa("XYZ123L9", "Carlos");
