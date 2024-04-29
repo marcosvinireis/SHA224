@@ -115,11 +115,14 @@ public class TabelaHash {
             boolean busca =false;
             for(int i=0;i< bucket.getTamanho();i++){
                 Nodo valor = bucket.busca(i);
-                if(valor.getId() == chave){
+                if(valor !=null && valor.getId() == chave){
                     System.out.println("Elemento encontrado :"+ valor.getHash());
                     busca=true;
                     break;
                 }
+            }
+            if(!busca){
+                System.out.println(ELEMENTO_NAO_EXISTE);
             }
         }
     }
