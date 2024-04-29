@@ -5,6 +5,7 @@ import listaEncadeada.ListaEncadeada;
 import sha224.Sha224;
 
 import java.io.*;
+import java.util.Objects;
 
 public class TabelaHash {
 
@@ -98,7 +99,12 @@ public class TabelaHash {
             System.out.println(ELEMENTO_NAO_EXISTE);
             return;
         }else {
-            Nodo elemento = this.tabela[pos].busca(pos);
+            Nodo elemento = new Nodo(null, null);
+            for (int i = 0; i < this.tabela[pos].getTamanho(); i++) {
+                if (Objects.equals(this.tabela[pos].busca(i).getId(), chave))
+                     elemento = this.tabela[pos].busca(i);
+            }
+
             if (this.tabela[pos].contains(elemento)){
                 int posLista = this.tabela[pos].buscaPorElemento(elemento);
                 this.tabela[pos].remover(posLista);

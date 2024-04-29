@@ -20,12 +20,10 @@ public class Teste{
         tabela.inserir("AHG266D0", p);
 
         tabela.buscar("AHG266D0");
+        System.out.println("--------------------------------");
 
-
-
-        tabela.imprimir();
-
-
+        tabela.remover("AHG266D0");
+        tabela.buscar(p.getId());
     }
 
     public static void apagarArquivo(String caminho) {
