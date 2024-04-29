@@ -8,7 +8,7 @@ import java.io.*;
 
 public class TabelaHash {
 
-    private ListaEncadeada<String> [] tabela;
+    private ListaEncadeada<Nodo> [] tabela;
     private int tamanho;
 
 
@@ -33,7 +33,7 @@ public class TabelaHash {
         return hash % this.tamanho;
     }
 
-    public ListaEncadeada<Pessoa> lerDeArquivo(String caminho) {
+    private ListaEncadeada<Pessoa> lerDeArquivo(String caminho) {
         ListaEncadeada<Pessoa> dados = new ListaEncadeada<>();
         try {
             BufferedReader br = new BufferedReader(new FileReader(caminho));
@@ -52,7 +52,7 @@ public class TabelaHash {
         return dados;
     }
 
-    public void gravarEmArquivo(String caminho, String hash, String nome) {
+    private void gravarEmArquivo(String caminho, String hash, String nome) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(caminho, true));
 
@@ -64,7 +64,6 @@ public class TabelaHash {
             e.printStackTrace();
         }
     }
-
 
     public void inserirDeArquivo(String path){
         ListaEncadeada<Pessoa> dados = this.lerDeArquivo(path);
@@ -78,17 +77,17 @@ public class TabelaHash {
         int pos = funcaoHash(chave);
         String hash = Sha224.calcularSHA224(valor.getNome());
         gravarEmArquivo("src/dados/saidaDados", hash, valor.getNome());
-
+        Nodo dado = new Nodo(valor.getId(), hash);
         if (posicaoVazia(pos)){
-            ListaEncadeada<String> bucket = new ListaEncadeada<>();
-            bucket.adicionar(hash);
+            ListaEncadeada<Nodo> bucket = new ListaEncadeada<>();
+            bucket.adicionar(dado);
             this.tabela[pos] = bucket;
         } else {
-            if (this.tabela[pos].contains(hash)){
+            if (this.tabela[pos].contains(dado)){
                 System.out.println(ELEMENTO_CADASTRADO);
                 return;
             }
-            this.tabela[pos].adicionar(hash);
+            this.tabela[pos].adicionar(dado);
         }
     }
 
@@ -99,8 +98,8 @@ public class TabelaHash {
             System.out.println(ELEMENTO_NAO_EXISTE);
             return;
         }else {
-            String elemento = this.tabela[pos].busca(pos);
-            if (this.tabela[pos].contains(chave)){
+            Nodo elemento = this.tabela[pos].busca(pos);
+            if (this.tabela[pos].contains(elemento)){
                 int posLista = this.tabela[pos].buscaPorElemento(elemento);
                 this.tabela[pos].remover(posLista);
             }else System.out.println(ELEMENTO_NAO_EXISTE);
@@ -109,16 +108,15 @@ public class TabelaHash {
 
     public void buscar(String chave){
         int pos = funcaoHash(chave);
-        String hash= Sha224.calcularSHA224(chave);
         if(posicaoVazia(pos)){
             System.out.println(ELEMENTO_NAO_EXISTE);
         }else{
-            ListaEncadeada<String> bucket = this.tabela[pos];
+            ListaEncadeada<Nodo> bucket = this.tabela[pos];
             boolean busca =false;
             for(int i=0;i< bucket.getTamanho();i++){
-                String valor = bucket.busca(i);
-                if(valor.equals(hash)){
-                    System.out.println("Elemento encontrado :"+ chave);
+                Nodo valor = bucket.busca(i);
+                if(valor.getId() == chave){
+                    System.out.println("Elemento encontrado :"+ valor.getHash());
                     busca=true;
                     break;
                 }
@@ -132,11 +130,12 @@ public class TabelaHash {
             if(posicaoVazia(i)){
                 System.out.println("Posição " + i + ": NULL");
             }else{
-                System.out.print("Posicao " + i + ": ");
-                ListaEncadeada<String> bucket = this.tabela[i];
+                System.out.print("Posicao " + i + ":\n");
+                ListaEncadeada<Nodo> bucket = this.tabela[i];
                 for (int j = 0; j < bucket.getTamanho(); j++) {
-                    String valor = bucket.busca(j);
-                    System.out.print(valor + " - " +  " . "); // Imprime chave e valor
+                    Nodo valor = bucket.busca(j);
+                    System.out.print("    "+valor);
+                    if (j < bucket.getTamanho() - 1) System.out.println();
                 }
                 System.out.println();
 
