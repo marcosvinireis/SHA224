@@ -80,14 +80,14 @@ public class TabelaHash {
     }
 
     public void remover(String chave){
-        int pos = this.funcaoHash(chave);
+        int pos = funcaoHash(chave);
 
         if (posicaoVazia(pos)) {
             System.out.println(ELEMENTO_NAO_EXISTE);
             return;
         }else {
             String elemento = this.tabela[pos].busca(pos);
-            if (this.tabela[pos].contains(elemento)){
+            if (this.tabela[pos].contains(chave)){
                 int posLista = this.tabela[pos].buscaPorElemento(elemento);
                 this.tabela[pos].remover(posLista);
             }else System.out.println(ELEMENTO_NAO_EXISTE);
@@ -95,7 +95,8 @@ public class TabelaHash {
     }
 
     public void buscar(String chave){
-        int pos = this.funcaoHash(chave);
+        int pos = funcaoHash(chave);
+        String hash= Sha224.calcularSHA224(chave);
         if(posicaoVazia(pos)){
             System.out.println(ELEMENTO_NAO_EXISTE);
         }else{
@@ -103,14 +104,11 @@ public class TabelaHash {
             boolean busca =false;
             for(int i=0;i< bucket.getTamanho();i++){
                 String valor = bucket.busca(i);
-                if(valor.equals(chave)){
-                    System.out.println("Elemento encontrado :"+ valor);
+                if(valor.equals(hash)){
+                    System.out.println("Elemento encontrado :"+ chave);
                     busca=true;
                     break;
                 }
-            }
-            if (!busca) {
-                System.out.println(ELEMENTO_NAO_EXISTE);
             }
         }
     }
@@ -118,8 +116,8 @@ public class TabelaHash {
     public void imprimir(){
         System.out.println("Tabela Hash: ");
         for (int i=0;i<this.tamanho;i++){
-            if(tabela[i]== null){
-                System.out.println("NULL");
+            if(posicaoVazia(i)){
+                System.out.println("Posição " + i + ": NULL");
             }else{
                 System.out.print("Posicao " + i + ": ");
                 ListaEncadeada<String> bucket = this.tabela[i];

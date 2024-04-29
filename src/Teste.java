@@ -20,7 +20,8 @@ public class Teste{
         tabela.buscar("AAA999Z1");
 
         tabela.imprimir();
+
+        tabela.remover("TYU123B2");
     }
-//coisa
 
 }
